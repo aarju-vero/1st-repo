@@ -1,0 +1,47 @@
+Mtcars:
+1.from google.colab import files
+files.upload()
+2.mtcars_df = spark.read.csv('mtcars.csv', header=True, inferSchema=True)
+mtcars_df.show(5)
+3.top_five_mpg = mtcars_df.orderBy(mtcars_df['mpg'], ascending=False).limit(5)
+top_five_mpg.show()
+4.low_mpg = mtcars_df.filter(mtcars_df['mpg'] < 18)
+low_mpg.show()
+5.low_mpg = mtcars_df.filter(mtcars_df['mpg'] < 18)
+low_mpg.show()
+6.from pyspark.sql.functions import col
+
+mtcars_df = mtcars_df.withColumn("wtTon", col("wt") * 0.45)
+mtcars_df.show()
+7.avg_weight_by_cyl = mtcars_df.groupBy('cyl').agg({'wt': 'avg'})
+avg_weight_by_cyl.show()
+8.mtcars_df.createOrReplaceTempView('mtcars')
+query = """
+SELECT gear
+FROM mtcars
+WHERE cyl BETWEEN 4 AND 9
+"""
+result = spark.sql(query)
+result.show()
+
+Worldcupplayers:
+1.from google.colab import files
+files.upload()
+2.!ls -l
+3.from pyspark.sql import SparkSession
+spark = SparkSession.builder.master("local").appName("WorldCupAnalysis").getOrCreate()
+4.df = spark.read.csv('WorldCupPlayers.csv', header=True, inferSchema=True)
+df.show(5)
+5.df.printSchema()
+6.rows = df.count()
+columns = len(df.columns)
+print(f'Number of Rows: {rows}')
+print(f'Number of Columns: {columns}')
+7.df.select('Player Name', 'Coach Name').show()
+8.match_1096 = df.filter(df['MatchID'] == 1096)
+match_1096.show()
+count = match_1096.count()
+print(f'Number of records with MatchID 1096: {count}')
+9.df.orderBy('MatchID').show()
+10.position_event = df.filter((df['Position'] == 'C') & (df['Event'] == "G40'"))
+position_event.show()
